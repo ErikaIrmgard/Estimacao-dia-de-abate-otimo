@@ -1,0 +1,22 @@
+# Pasta de dados (não subir dados reais)
+data/
+
+# Arquivos de saída
+outputs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Ambiente virtual
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Sistema
+.DS_Store
+Thumbs.db
