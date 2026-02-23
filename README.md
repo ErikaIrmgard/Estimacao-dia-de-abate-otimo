@@ -1,65 +1,130 @@
-# Estimacao-dia-de-abate-otimo
-Este projeto ajusta curvas de crescimento sigmoides a dados de peso por idade (dias) de frangos, para estimar a idade ótima de abate (dia em que o lote/produtor atinge 2800 g) e gerar indicadores para comparação com a curva do produtor no Power BI.
-Entrada
+# 📊 Estimacao-dia-de-abate-otimo
 
-Planilha Excel com medições de:
-produtor (CODIGO_DO_PRODUTOR)
-sexo do lote, linhagem, tipo de aviário
-idade em dias (IDADE)
-peso (PESO)
-identificação do lote (NOME_DO_LOTE)
+Projeto para ajuste de curvas de crescimento sigmoides a dados de peso por idade (dias) de frangos, com objetivo de estimar a idade ótima de abate (quando o lote atinge 2800g) e gerar indicadores comparativos para uso em dashboard no Power BI.
 
-O script converte números no padrão PT-BR (vírgula decimal), remove registros inválidos e padroniza as chaves (trim de strings).
+---
 
-Pré-processamento e agregação
-Conta quantos lotes existem por grupo (produtor, sexo, linhagem, tipo de aviário).
-Calcula a curva média do produtor por idade (média do peso em cada idade dentro do grupo).
-Essa curva agregada é a base usada para modelagem “por produtor”.
+## 🎯 Objetivo
 
-Modelos de crescimento testados
+- Estimar o **dia ótimo de abate (2800g)**
+- Comparar desempenho do lote vs curva do produtor
+- Gerar métricas estatísticas de ajuste
+- Alimentar visual analítico no Power BI
 
-Para cada grupo (produtor/sexo/linhagem/aviário), o script tenta ajustar automaticamente um dos modelos:
-Gompertz
-Logístico
-Von Bertalanffy
-Richards
+---
 
-O ajuste é feito com scipy.optimize.curve_fit, com limites biológicos (assíntota entre 2000 e 6000g, e limites coerentes de parâmetros), para evitar soluções absurdas.
-Escolha automática do melhor modelo
-Quando o grupo tem 5 ou mais pontos, os quatro modelos são ajustados e comparados usando o AIC (Akaike Information Criterion).
-O modelo com menor AIC é escolhido.
-Também é calculado: 
-R² do ajuste
-LOOCV (validação cruzada Leave-One-Out), quando aplicável:
-R2_LOOCV
-RMSE_LOOCV
+## 📥 Dados de Entrada
 
-Estratégias quando há poucos dados
+Planilha Excel contendo:
 
-O script inclui regras para grupos com pouca informação:
-Se o produtor tem 1–2 lotes: usa um “pool” de outros produtores com mesmo sexo/linhagem/aviário, ajusta Gompertz e aplica como referência.
-Se há 2–4 pontos: ajusta Gompertz parcial, fixando a assíntota A a partir de uma curva-base.
-Se há 0–1 ponto: usa apenas a curva-base (Gompertz) estimada previamente.
+- CODIGO_DO_PRODUTOR  
+- NOME_DO_LOTE  
+- SEXO  
+- LINHAGEM  
+- TIPO_DE_AVIARIO  
+- IDADE (dias)  
+- PESO (g)  
 
-Curvas-base
+---
 
-Antes de tudo, o script ajusta uma curva-base Gompertz para cada combinação (produtor/sexo/linhagem/aviário) para ter parâmetros iniciais robustos e fallback em cenários com poucos dados.
-Estimativas principais
-Para o modelo escolhido, calcula:
-IDADE_PARA_2800G: idade em que o peso previsto atinge 2800 g
-(inversão numérica com brentq)
-aplica um filtro biológico: IDADE_MIN_BIO = 28 e IDADE_MAX_BIO = 65
-se cair fora, marca e zera (fica NaN) em IDADE_PARA_2800G_AJUST
-peso_previsto_42: peso previsto no dia 42
-peso_real_42: peso real observado no dia 42 (se existir)
+## ⚙️ Pré-processamento
 
-Patch importante (Logístico)
-Em alguns casos o parâmetro A do modelo Logístico pode ficar inválido/NaN.
-O script tem um “PATCH” que reconstrói A usando uma observação de referência (preferencialmente o peso real aos 42 dias), garantindo consistência do modelo.
-Saída
-Gera um CSV consolidado com: chaves do grupo, modelo escolhido e parâmetros, assíntota e flags de qualidade, métricas (R², LOOCV), idade estimada para 2800g (crua e ajustada), peso previsto e real aos 42 dias,
-número de pontos usados
+- Conversão para padrão PT-BR (vírgula decimal)
+- Remoção de registros inválidos
+- Padronização de chaves (trim de strings)
+- Agregação por grupo (produtor/sexo/linhagem/aviário)
+- Cálculo da curva média por idade
 
-## 📊 Dashboard – Curvas de Crescimento
+---
 
-![Dashboard](URL_DA_IMAGEM_AQUI)
+## 📈 Modelos de Crescimento Testados
+
+Para cada grupo o script testa automaticamente:
+
+- Gompertz  
+- Logístico  
+- Von Bertalanffy  
+- Richards  
+
+O ajuste é feito com `scipy.optimize.curve_fit`, com limites biológicos:
+
+- Assíntota entre 2000g e 6000g
+- Controle para evitar soluções absurdas
+
+### 🔎 Seleção do Melhor Modelo
+
+- Comparação via **AIC (Akaike Information Criterion)**
+- Escolha do menor AIC
+- Cálculo adicional:
+  - R²
+  - LOOCV
+  - RMSE_LOOCV
+
+---
+
+## 🧠 Estratégia para Poucos Dados
+
+Regras aplicadas:
+
+- 1–2 lotes → uso de "pool" de referência
+- 3–4 pontos → ajuste parcial Gompertz
+- 0–1 ponto → uso da curva-base estimada
+
+---
+
+## 📊 Métricas Calculadas
+
+- IDADE_PARA_2800G  
+- IDADE_MIN_BIO  
+- IDADE_MAX_BIO  
+- IDADE_PARA_2800G_AJUST (quando necessário)  
+- PESO_PREVISTO_42  
+- PESO_REAL_42  
+- R²  
+- LOOCV  
+
+---
+
+## 🛠 Patch Importante (Modelo Logístico)
+
+Em casos onde o parâmetro A fica inválido, o script reconstrói a assíntota usando observação de referência (preferencialmente peso real aos 42 dias).
+
+---
+
+## 📤 Saída
+
+Geração de CSV consolidado contendo:
+
+- Grupo
+- Modelo escolhido
+- Parâmetros estimados
+- Métricas estatísticas
+- Idade estimada para 2800g
+- Peso previsto vs real aos 42 dias
+
+---
+
+# 📊 Dashboard – Curvas de Crescimento
+
+Visual desenvolvido no Power BI para análise comparativa de desempenho produtivo.
+
+## 🖼️ Visual do Dashboard
+
+![Dashboard Curvas de Crescimento](Dashboard%20Curvas%20de%20Crescimento.png)
+
+---
+
+## 🚀 Tecnologias Utilizadas
+
+- Python
+- Pandas
+- NumPy
+- SciPy
+- Power BI
+
+---
+
+## 👤 Autor
+
+Erika L. M. Gard  
+Projeto desenvolvido para portfólio de análise de dados aplicada ao setor agroindustrial.
