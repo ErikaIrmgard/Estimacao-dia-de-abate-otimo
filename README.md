@@ -1,50 +1,56 @@
-# 📊 Estimacao-dia-de-abate-otimo
+# 📊 Estimativa do Dia de Abate Ótimo
 
-Projeto de modelagem de curvas de crescimento para estimar a idade ótima de abate (2800g) e gerar indicadores comparativos utilizados em dashboard no Power BI.
+Projeto de modelagem estatística para ajuste de curvas de crescimento em frangos de corte, com objetivo de estimar a idade ótima de abate (2800g) e gerar indicadores comparativos utilizados em dashboard no Power BI.
 
 ---
 
 ## 📌 Contexto do Problema
 
-Na produção avícola, decisões sobre o momento ideal de abate impactam diretamente:
+Na produção avícola, a definição do momento ideal de abate impacta diretamente:
 
-- Rentabilidade
-- Eficiência produtiva
-- Planejamento operacional
-- Comparação entre desempenho real vs produtor
+- 💰 Rentabilidade
+- 📈 Eficiência produtiva
+- 🏭 Planejamento operacional
+- 📊 Comparação entre desempenho real vs produtor
 
-Este projeto ajusta modelos matemáticos sigmoides para estimar com precisão o ponto ótimo de abate.
+Decisões imprecisas podem gerar perda de margem ou subaproveitamento do potencial produtivo.
+
+Este projeto aplica modelos matemáticos sigmoides para estimar com precisão o ponto ótimo de abate com base em dados reais de peso por idade.
 
 ---
 
 ## 🎯 Objetivos do Projeto
 
-- Ajustar curvas de crescimento por grupo
+- Ajustar curvas de crescimento por grupo (produtor/sexo/linhagem/aviário)
 - Estimar idade para atingir 2800g
-- Comparar peso real vs previsto
+- Comparar peso real vs peso previsto
 - Selecionar automaticamente o melhor modelo estatístico
-- Gerar base estruturada para visualização no Power BI
+- Gerar base estruturada para visualização analítica no Power BI
 
 ---
 
-## 📈 Modelos Testados
+## 📈 Modelos de Crescimento Testados
 
-- Gompertz
-- Logístico
-- Von Bertalanffy
-- Richards
+- Gompertz  
+- Logístico  
+- Von Bertalanffy  
+- Richards  
 
-Seleção automática via AIC (Akaike Information Criterion).
+A seleção do modelo é feita automaticamente via:
+
+**AIC – Akaike Information Criterion**
+
+O modelo com menor AIC é escolhido como melhor ajuste.
 
 ---
 
 ## 🧠 Estratégia Estatística
 
-- Ajuste com `scipy.optimize.curve_fit`
-- Controle de limites biológicos
+- Ajuste utilizando `scipy.optimize.curve_fit`
+- Definição de limites biológicos (assíntota entre 2000g e 6000g)
 - Cálculo de R²
-- Validação cruzada LOOCV
-- Tratamento especial para poucos dados
+- Validação cruzada Leave-One-Out (LOOCV)
+- Estratégia específica para grupos com poucos dados
 
 ---
 
@@ -54,21 +60,21 @@ Arquivo consolidado contendo:
 
 - Modelo escolhido
 - Parâmetros estimados
-- Idade para 2800g
+- Idade estimada para 2800g
 - Peso previsto vs real aos 42 dias
-- Métricas estatísticas
+- Métricas estatísticas (R², LOOCV)
 
 ---
 
 # 📊 Dashboard – Curvas de Crescimento
 
-Visual analítico desenvolvido no Power BI para acompanhamento do desempenho produtivo.
+Os resultados do modelo alimentam um dashboard desenvolvido no Power BI para análise comparativa do desempenho produtivo.
 
 ---
 
 ## 🖼️ Visual do Dashboard
 
-![Dashboard Curvas de Crescimento](./Dashboard%20Curvas%20de%20Crescimento.png)
+![Dashboard Curvas de Crescimento](./dashboard-curvas-crescimento.png)
 
 ---
 
@@ -82,4 +88,5 @@ Visual analítico desenvolvido no Power BI para acompanhamento do desempenho pro
 
 ---
 
-Projeto para portfólio de análise de dados aplicada ao setor agroindustrial.
+
+Projeto desenvolvido como portfólio de análise de dados aplicada ao setor agroindustrial.
