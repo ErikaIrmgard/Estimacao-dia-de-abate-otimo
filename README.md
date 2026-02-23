@@ -59,3 +59,7 @@ O script tem um “PATCH” que reconstrói A usando uma observação de referê
 Saída
 Gera um CSV consolidado com: chaves do grupo, modelo escolhido e parâmetros, assíntota e flags de qualidade, métricas (R², LOOCV), idade estimada para 2800g (crua e ajustada), peso previsto e real aos 42 dias,
 número de pontos usados
+
+## 📊 Dashboard – Curvas de Crescimento
+
+![Dashboard](URL_DA_IMAGEM_AQUI)
