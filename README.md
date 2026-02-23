@@ -1,116 +1,74 @@
 # 📊 Estimacao-dia-de-abate-otimo
 
-Projeto para ajuste de curvas de crescimento sigmoides a dados de peso por idade (dias) de frangos, com objetivo de estimar a idade ótima de abate (quando o lote atinge 2800g) e gerar indicadores comparativos para uso em dashboard no Power BI.
+Projeto de modelagem de curvas de crescimento para estimar a idade ótima de abate (2800g) e gerar indicadores comparativos utilizados em dashboard no Power BI.
 
 ---
 
-## 🎯 Objetivo
+## 📌 Contexto do Problema
 
-- Estimar o **dia ótimo de abate (2800g)**
-- Comparar desempenho do lote vs curva do produtor
-- Gerar métricas estatísticas de ajuste
-- Alimentar visual analítico no Power BI
+Na produção avícola, decisões sobre o momento ideal de abate impactam diretamente:
 
----
+- Rentabilidade
+- Eficiência produtiva
+- Planejamento operacional
+- Comparação entre desempenho real vs produtor
 
-## 📥 Dados de Entrada
-
-Planilha Excel contendo:
-
-- CODIGO_DO_PRODUTOR  
-- NOME_DO_LOTE  
-- SEXO  
-- LINHAGEM  
-- TIPO_DE_AVIARIO  
-- IDADE (dias)  
-- PESO (g)  
+Este projeto ajusta modelos matemáticos sigmoides para estimar com precisão o ponto ótimo de abate.
 
 ---
 
-## ⚙️ Pré-processamento
+## 🎯 Objetivos do Projeto
 
-- Conversão para padrão PT-BR (vírgula decimal)
-- Remoção de registros inválidos
-- Padronização de chaves (trim de strings)
-- Agregação por grupo (produtor/sexo/linhagem/aviário)
-- Cálculo da curva média por idade
-
----
-
-## 📈 Modelos de Crescimento Testados
-
-Para cada grupo o script testa automaticamente:
-
-- Gompertz  
-- Logístico  
-- Von Bertalanffy  
-- Richards  
-
-O ajuste é feito com `scipy.optimize.curve_fit`, com limites biológicos:
-
-- Assíntota entre 2000g e 6000g
-- Controle para evitar soluções absurdas
-
-### 🔎 Seleção do Melhor Modelo
-
-- Comparação via **AIC (Akaike Information Criterion)**
-- Escolha do menor AIC
-- Cálculo adicional:
-  - R²
-  - LOOCV
-  - RMSE_LOOCV
+- Ajustar curvas de crescimento por grupo
+- Estimar idade para atingir 2800g
+- Comparar peso real vs previsto
+- Selecionar automaticamente o melhor modelo estatístico
+- Gerar base estruturada para visualização no Power BI
 
 ---
 
-## 🧠 Estratégia para Poucos Dados
+## 📈 Modelos Testados
 
-Regras aplicadas:
+- Gompertz
+- Logístico
+- Von Bertalanffy
+- Richards
 
-- 1–2 lotes → uso de "pool" de referência
-- 3–4 pontos → ajuste parcial Gompertz
-- 0–1 ponto → uso da curva-base estimada
-
----
-
-## 📊 Métricas Calculadas
-
-- IDADE_PARA_2800G  
-- IDADE_MIN_BIO  
-- IDADE_MAX_BIO  
-- IDADE_PARA_2800G_AJUST (quando necessário)  
-- PESO_PREVISTO_42  
-- PESO_REAL_42  
-- R²  
-- LOOCV  
+Seleção automática via AIC (Akaike Information Criterion).
 
 ---
 
-## 🛠 Patch Importante (Modelo Logístico)
+## 🧠 Estratégia Estatística
 
-Em casos onde o parâmetro A fica inválido, o script reconstrói a assíntota usando observação de referência (preferencialmente peso real aos 42 dias).
+- Ajuste com `scipy.optimize.curve_fit`
+- Controle de limites biológicos
+- Cálculo de R²
+- Validação cruzada LOOCV
+- Tratamento especial para poucos dados
 
 ---
 
-## 📤 Saída
+## 📤 Saída Gerada
 
-Geração de CSV consolidado contendo:
+Arquivo consolidado contendo:
 
-- Grupo
 - Modelo escolhido
 - Parâmetros estimados
-- Métricas estatísticas
-- Idade estimada para 2800g
+- Idade para 2800g
 - Peso previsto vs real aos 42 dias
+- Métricas estatísticas
 
 ---
 
 # 📊 Dashboard – Curvas de Crescimento
 
-Visual desenvolvido no Power BI para análise comparativa de desempenho produtivo.
+Visual analítico desenvolvido no Power BI para acompanhamento do desempenho produtivo.
+
+---
 
 ## 🖼️ Visual do Dashboard
 
-![Dashboard Curvas de Crescimento](Dashboard%20Curvas%20de%20Crescimento.png)
+![Dashboard Curvas de Crescimento](./Dashboard%20Curvas%20de%20Crescimento.png)
 
 ---
 
@@ -124,7 +82,4 @@ Visual desenvolvido no Power BI para análise comparativa de desempenho produtiv
 
 ---
 
-## 👤 Autor
-
-Erika L. M. Gard  
-Projeto desenvolvido para portfólio de análise de dados aplicada ao setor agroindustrial.
+Projeto para portfólio de análise de dados aplicada ao setor agroindustrial.
