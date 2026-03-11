@@ -1,4 +1,4 @@
-# 📊 Estimativa do Dia de Abate Ótimo
+# 📊 Estimativa do Dia de Abate Ótimo com Curvas de Crescimento
 
 Projeto de modelagem estatística para ajuste de curvas de crescimento em frangos de corte, com objetivo de estimar a idade ótima de abate (2800g) e gerar indicadores comparativos utilizados em dashboard no Power BI.
 
